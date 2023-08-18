@@ -1,66 +1,92 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Requirements
+Make sure you have :
+- php 8.1 or more
+- composer
+- latest node
+- npm
+- database(mysql,sqlite..) as you want that are supported by laravel
 
-## About Laravel
+## Installation
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1 . Clone the project form GitHub
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```sh
+git clone https://github.com/suadikhasen/GovAssistUrlShortener
+```
+2 . Navigate  to your directory use below command for ubuntu or macos  
+replace ``` your_directory ``` by your directory name
+```sh
+cd your_directory 
+```
 
-## Learning Laravel
+3 Install php third party packages run the command below
+```sh
+composer install
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+4 install node packages
+```sh
+npm install
+```
+5 copy .env.example to .env file for ubuntu or macos use below command
+```sh
+cp .env.exampe .env
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+6 Generate application key
+```sh
+php artisan key:generate
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+7 don't forget to change the APP_URL value in your environment file to your application url in my case
+```sh
+APP_URL=http://urlshortener.test
+```
 
-## Laravel Sponsors
+## how to use (Web)
+once you serve the project navigate to the application url ,you will get the option to register or login
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+once you logged in to the application you will be redirected to the:
 
-### Premium Partners
+```sh
+/url_shortener_dashboard
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+After you land to the page you can submit the url and generate the shortened url.
+the table at this page will show you the latest 10 generated url.
 
-## Contributing
+## how to use (API)
+In order to use the API use below POST endpoing
+```sh
+api/shorten_url
+```
+the endpoint require a ``` destination ``` payload the destination needs to be the valid url.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+when there is a validation error you will get the error like this and http code will be 422
+```
+{
+    "destination": [
+        "The destination field must be a valid URL."
+    ]
+}
+```
+## Unofficial third party packages
+In this project i have used two dev libraries  
+- Laravel ide helper - used for auto completion <a href="https://github.com/barryvdh/laravel-ide-helper">Laravel ide helper</a>  
+- Laravel debug bar  - used for debugging <a href="https://github.com/barryvdh/laravel-debugbar">Laravel debug bar</a>
+## Code structure
+There are additional directories in the app folder  
+- ``` Actions ``` used to organize actions , specially used  to minimize code  inside the controller.  
+- ``` Services ``` used to handle additional business logics.
 
-## Code of Conduct
+There is a controller ``` UrlShortenerController ``` inside the controller directory this controller is used for handling non authentication web tasks.
+The authentication feature is handled by laravel breeze which is located inside Auth folder 
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Inside the controller `` Api `` folder there is a controller `` UrlShortenerController `` used for handling the API.
+## Testing
+There are two types of tests, feature test and unit test:
+- In feature test the test are located  inside Web and Api folder.
+- In unit  test the test are located  inside Jobs folder.
+- The Auth folder inside feature test is the default laravel breeze test.
